@@ -1,0 +1,90 @@
+4)Write a select query to display employee ID, name field where first name and last name is concatenate, dept ID, dept name(if the employee is hired between 2000-2010 mention their dept name. If the employee hired before 2000 mention as former employee). dept_id should be ascending order
+top 10 result only
+
+
+
+
+create table employees(
+emp_id number,
+first_name varchar2(50),
+last_name varchar2(50),
+hire_date date
+);
+
+
+create table dept_emp(
+emp_id number,
+dept_id number
+);
+
+create table department(
+dept_id number,
+dept_name varchar2(20)
+);
+
+INSERT INTO employees VALUES (1, 'John', 'Doe', TO_DATE('2000-06-01', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (2, 'Jane', 'Smith', TO_DATE('1990-07-15', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (3, 'Alice', 'Johnson', TO_DATE('2002-08-20', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (4, 'Bob', 'Brown', TO_DATE('2002-09-10', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (5, 'Charlie', 'Davis', TO_DATE('2003-10-05', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (6, 'Diana', 'Miller', TO_DATE('1990-11-12', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (7, 'Ethan', 'Wilson', TO_DATE('1999-12-01', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (8, 'Fiona', 'Moore', TO_DATE('2010-01-25', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (9, 'George', 'Taylor', TO_DATE('2008-02-14', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (10, 'Hannah', 'Anderson', TO_DATE('1998-03-30', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (11, 'Ian', 'Thomas', TO_DATE('1995-04-18', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (12, 'Julia', 'Jackson', TO_DATE('1999-05-22', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (13, 'Kevin', 'White', TO_DATE('2005-06-10', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (14, 'Laura', 'Harris', TO_DATE('2004-07-01', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (15, 'Mike', 'Martin', TO_DATE('2005-08-15', 'YYYY-MM-DD'));
+
+
+INSERT INTO dept_emp VALUES (1, 101);
+INSERT INTO dept_emp VALUES (2, 101);
+INSERT INTO dept_emp VALUES (3, 101);
+INSERT INTO dept_emp VALUES (4, 102);
+INSERT INTO dept_emp VALUES (5, 102);
+INSERT INTO dept_emp VALUES (6, 103);
+INSERT INTO dept_emp VALUES (7, 103);
+INSERT INTO dept_emp VALUES (8, 103);
+INSERT INTO dept_emp VALUES (9, 104);
+INSERT INTO dept_emp VALUES (10, 104);
+INSERT INTO dept_emp VALUES (11, 105);
+INSERT INTO dept_emp VALUES (12, 105);
+INSERT INTO dept_emp VALUES (13, 106);
+INSERT INTO dept_emp VALUES (14, 106);
+INSERT INTO dept_emp VALUES (15, 106);
+
+
+
+INSERT INTO department VALUES (101, 'Sales');
+INSERT INTO department VALUES (102, 'HR');
+INSERT INTO department VALUES (103, 'IT');
+INSERT INTO department VALUES (104, 'Support');
+INSERT INTO department VALUES (105, 'Finance');
+INSERT INTO department VALUES (106, 'Admin');
+
+
+select * from employees;
+select * from department;
+select * from dept_emp;
+
+
+ANSWER:
+
+
+SELECT e.emp_id,
+       e.first_name || ' ' || e.last_name AS name,
+       de.dept_id,
+       CASE
+           WHEN e.hire_date BETWEEN TO_DATE('2000-01-01', 'YYYY-MM-DD') AND TO_DATE('2010-12-31', 'YYYY-MM-DD')
+               THEN d.dept_name
+           WHEN e.hire_date < TO_DATE('2000-01-01', 'YYYY-MM-DD')
+               THEN 'Former Employee'
+       END AS dept_status
+FROM employees e
+JOIN dept_emp de ON e.emp_id = de.emp_id
+JOIN department d ON de.dept_id = d.dept_id
+ORDER BY de.dept_id ASC
+FETCH FIRST 10 ROWS ONLY;
+

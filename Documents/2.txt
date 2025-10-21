@@ -1,0 +1,110 @@
+2)Write a select query to display the employee ID, department id, of those employees whose salary is equal to avg salary or more than avg salary and sort by descending order based on salary
+top 10 result only
+
+
+
+
+create table employees (
+emp_id number,
+first_name varchar2(50),
+last_name varchar2(50),
+hire_date date
+);
+
+
+create table department(
+emp_id number,
+dept_id number
+);
+
+
+
+create table salaries(
+emp_id number,
+salary number
+);
+
+
+INSERT INTO employees  VALUES (1, 'John', 'Doe', TO_DATE('2015-06-01', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (2, 'Jane', 'Smith', TO_DATE('2016-07-15', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (3, 'Alice', 'Johnson', TO_DATE('2017-08-20', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (4, 'Bob', 'Brown', TO_DATE('2018-09-10', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (5, 'Charlie', 'Davis', TO_DATE('2019-10-05', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (6, 'Diana', 'Miller', TO_DATE('2020-11-12', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (7, 'Ethan', 'Wilson', TO_DATE('2021-12-01', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (8, 'Fiona', 'Moore', TO_DATE('2022-01-25', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (9, 'George', 'Taylor', TO_DATE('2022-02-14', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (10, 'Hannah', 'Anderson', TO_DATE('2022-03-30', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (11, 'Ian', 'Thomas', TO_DATE('2022-04-18', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (12, 'Julia', 'Jackson', TO_DATE('2022-05-22', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (13, 'Kevin', 'White', TO_DATE('2022-06-10', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (14, 'Laura', 'Harris', TO_DATE('2022-07-01', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (15, 'Mike', 'Martin', TO_DATE('2022-08-15', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (16, 'Nina', 'Thompson', TO_DATE('2022-09-05', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (17, 'Oscar', 'Garcia', TO_DATE('2022-10-20', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (18, 'Paula', 'Martinez', TO_DATE('2022-11-11', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (19, 'Quinn', 'Robinson', TO_DATE('2022-12-25', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (20, 'Rachel', 'Clark', TO_DATE('2023-01-10', 'YYYY-MM-DD'));
+
+INSERT INTO department  VALUES (1, 101);
+INSERT INTO department  VALUES(2, 101);
+INSERT INTO department  VALUES(3, 102); 
+INSERT INTO department  VALUES(4, 102); 
+INSERT INTO department  VALUES(5, 103);
+INSERT INTO department  VALUES(6, 103); 
+INSERT INTO department  VALUES(7, 104); 
+INSERT INTO department  VALUES(8, 104); 
+INSERT INTO department  VALUES(9, 105);
+INSERT INTO department  VALUES(10, 105);
+INSERT INTO department  VALUES(11, 106); 
+INSERT INTO department  VALUES(12, 106); 
+INSERT INTO department  VALUES(13, 107); 
+INSERT INTO department  VALUES(14, 107); 
+INSERT INTO department  VALUES(15, 108);
+INSERT INTO department  VALUES(16, 108); 
+INSERT INTO department  VALUES(17, 109); 
+INSERT INTO department  VALUES(18, 109); 
+INSERT INTO department  VALUES(19, 110); 
+INSERT INTO department  VALUES(20, 110);
+
+INSERT INTO salaries  VALUES (1, 60000); 
+INSERT INTO salaries  VALUES (2, 62000);
+INSERT INTO salaries  VALUES (3, 58000); 
+INSERT INTO salaries  VALUES (4, 59000);
+INSERT INTO salaries  VALUES (5, 61000); 
+INSERT INTO salaries  VALUES (6, 63000);
+INSERT INTO salaries  VALUES (7, 64000); 
+INSERT INTO salaries  VALUES (8, 65000);
+INSERT INTO salaries  VALUES (9, 66000); 
+INSERT INTO salaries  VALUES (10, 67000);
+INSERT INTO salaries  VALUES (11, 68000); 
+INSERT INTO salaries  VALUES (12, 69000);
+INSERT INTO salaries  VALUES (13, 70000); 
+INSERT INTO salaries  VALUES (14, 71000);
+INSERT INTO salaries  VALUES (15, 72000); 
+INSERT INTO salaries  VALUES (16, 73000);
+INSERT INTO salaries  VALUES (17, 74000); 
+INSERT INTO salaries  VALUES (18, 75000);
+INSERT INTO salaries  VALUES (19, 76000); 
+INSERT INTO salaries  VALUES (20, 77000);
+
+
+select * from employees;
+select * from department;
+select * from salaries;
+
+ANSWER:
+
+SELECT e.emp_id, d.dept_id, s.salary
+FROM employees e
+JOIN department d ON e.emp_id = d.emp_id
+JOIN salaries s ON e.emp_id = s.emp_id
+WHERE s.salary >= (
+    SELECT AVG(s2.salary)
+    FROM salaries s2
+    JOIN department d2 ON s2.emp_id = d2.emp_id
+    WHERE d2.dept_id = d.dept_id
+)
+ORDER BY s.salary DESC
+FETCH FIRST 10 ROWS ONLY;
+
